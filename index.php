@@ -11,8 +11,11 @@ session_start();
 $action = filter_input(INPUT_POST, 'action');
 if ($action == NULL) {
     $action = filter_input(INPUT_GET, 'action');
-    if ($action == NULL) {
+    if ($action == NULL && empty($_SESSION['user'])) {
         $action = 'display_login';
+    }
+    else{
+        $action = 'display_questions';
     }
 }
 
