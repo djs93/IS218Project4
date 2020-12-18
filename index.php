@@ -1,7 +1,12 @@
 <?php
+
+require('model/account.php');
+require('model/question.php');
 require('model/database.php');
 require('model/accounts_db.php');
 require('model/questions_db.php');
+
+session_start();
 
 $action = filter_input(INPUT_POST, 'action');
 if ($action == NULL) {
@@ -18,7 +23,6 @@ switch ($action) {
     }
 
     case 'display_login_errored': {
-        echo("Displaying errored");
         $hasLogonError = true;
         include('views/login.php');
         break;
@@ -50,6 +54,7 @@ switch ($action) {
             //$error .= "Password must be at least 8 characters!<br>";
             //$hasPasswordError = true;
         //}
+
         if($hasEmailError == true || $hasPasswordError == true){
             if(!empty($email)){
                 header("Location: .?action=display_login_errored&email=$email");
@@ -58,12 +63,13 @@ switch ($action) {
                 header('Location: .?action=display_login_errored');
             }
         } else {
-            $userId = validate_login($email, $password);
-            if($userId==false){
+            $user = AccountsDB::validate_login($email, $password);
+            if($user==false){
                 header("Location: .?action=display_login_errored&email=$email");
             }
             else {
-                header("Location: .?action=display_questions&userId=$userId");
+                $_SESSION['user']=$user;
+                header("Location: .?action=display_questions");
             }
         }
         break;
@@ -189,17 +195,20 @@ switch ($action) {
             }
             header($loc);
         } else {
-            $userValid = check_registered($email);
+            $userValid = AccountsDB::check_registered($email);
             if($userValid==true){
                 header("Location: .?action=display_registration_already_exists&email=$email&fname=$fname&lname=$lname&bday=$bday");
             }
             else {
-                $userId = add_user($email, $fname, $lname, $bday, $password);
-                if($userId == false){
+                $user = AccountsDB::add_user($email, $fname, $lname, $bday, $password);
+                if($user == false){
                     $error = "Unknown error while adding user";
                     include('errors/error.php');
                 }
-                header("Location: .?action=display_questions&userId=$userId");
+                else {
+                    $_SESSION['user'] = $user;
+                    header("Location: .?action=display_questions");
+                }
             }
         }
 
@@ -207,11 +216,10 @@ switch ($action) {
     }
 
     case 'display_questions':{
-        $userId = filter_input(INPUT_GET, 'userId');
-        if($userId == NULL || $userId < 0){
+        if(empty($_SESSION['user']) || $_SESSION['user']->getId() < 0){
             header('Location: .?action=display_login');
         } else{
-            $questions = get_users_questions($userId);
+            $questions = QuestionsDB::get_users_questions($_SESSION['user']->getId());
             include('views/display_questions.php');
         }
         break;
@@ -219,11 +227,7 @@ switch ($action) {
 
     //This is the 'display_new_question' case in the project outline
     case 'display_question_form':{
-        $userId = filter_input(INPUT_GET, 'userId');
-        if(empty($userId) || $userId<0){
-            $userId = filter_input(INPUT_POST, 'userId');
-        }
-        if($userId == NULL || $userId <0){
+        if(empty($_SESSION['user']) || $_SESSION['user']->getId() < 0){
             header('Location: .?action=display_login');
         } else{
             include('views/new_question.php');
@@ -232,14 +236,10 @@ switch ($action) {
     }
 
     case 'display_question_form_errored':{
-        $userId = filter_input(INPUT_POST, 'userId');
-        if(empty($userId) || $userId<0){
-            $userId = filter_input(INPUT_GET, 'userId');
-        }
         $nameError = filter_input(INPUT_GET, 'nameError');
         $bodyError = filter_input(INPUT_GET, 'bodyError');
         $skillsError = filter_input(INPUT_GET, 'skillsError');
-        if($userId == NULL || $userId <0){
+        if(empty($_SESSION['user']) || $_SESSION['user']->getId() < 0){
             header('Location: .?action=display_login');
         } else{
             include('views/new_question.php');
@@ -249,7 +249,6 @@ switch ($action) {
 
     //This is the 'create_new_question' case in the project outline
     case 'submit_question':{
-        $userId = filter_input(INPUT_POST, 'userId');
         $title = filter_input(INPUT_POST, 'name', FILTER_DEFAULT);
         $body = filter_input(INPUT_POST, 'body', FILTER_DEFAULT);
         $skills = filter_input(INPUT_POST, 'skills', FILTER_DEFAULT);
@@ -286,7 +285,7 @@ switch ($action) {
             $hasSkillsError = true;
         }
         if($hasNameError || $hasBodyError || $hasSkillsError){
-            $loc = "Location: .?action=display_question_form_errored&userId=$userId";
+            $loc = "Location: .?action=display_question_form_errored";
             if($hasNameError){
                 $loc .= "&nameError=$nameError";
             }
@@ -298,23 +297,16 @@ switch ($action) {
             }
             header($loc);
         } else{
-            create_question($title, $body, $skills, $userId);
-            header("Location: .?action=display_questions&userId=$userId");
+            QuestionsDB::create_question($title, $body, $skills, $_SESSION['user']->getId());
+            header("Location: .?action=display_questions");
         }
         break;
     }
 
     case 'display_edit_question':{
-        $userId = filter_input(INPUT_POST, 'userId');
-        if(empty($userId) || $userId<0){
-            $userId = filter_input(INPUT_GET, 'userId');
-        }
         $questionId = filter_input(INPUT_POST, 'questionId');
-        $question = get_question($questionId);
-        $qtitle = $question['title'];
-        $body = $question['body'];
-        $skills = $question['skills'];
-        if($userId == NULL || $userId <0){
+        $question = QuestionsDB::get_question($questionId);
+        if(empty($_SESSION['user']) || $_SESSION['user']->getId() < 0){
             header('Location: .?action=display_login');
         } else{
             include('views/edit_question.php');
@@ -323,7 +315,6 @@ switch ($action) {
     }
 
     case 'edit_question':{
-        $userId = filter_input(INPUT_POST, 'userId');
         $questionID = filter_input(INPUT_POST, 'questionId');
         $qtitle = filter_input(INPUT_POST, 'name', FILTER_DEFAULT);
         $body = filter_input(INPUT_POST, 'body', FILTER_DEFAULT);
@@ -361,7 +352,7 @@ switch ($action) {
             $hasSkillsError = true;
         }
         if($hasNameError || $hasBodyError || $hasSkillsError){
-            $loc = "Location: .?action=display_edit_question_form_errored&userId=$userId&name=$qtitle&body=$body&skills=$skills";
+            $loc = "Location: .?action=display_edit_question_form_errored&name=$qtitle&body=$body&skills=$skills";
             if($hasNameError){
                 $loc .= "&nameError=$nameError";
             }
@@ -373,17 +364,13 @@ switch ($action) {
             }
             header($loc);
         } else{
-            edit_question($questionID, $qtitle, $body, $skills);
-            header("Location: .?action=display_questions&userId=$userId");
+            QuestionsDB::edit_question($questionID, $qtitle, $body, $skills);
+            header("Location: .?action=display_questions");
         }
         break;
     }
 
     case 'display_edit_question_form_errored':{
-        $userId = filter_input(INPUT_POST, 'userId');
-        if(empty($userId) || $userId<0){
-            $userId = filter_input(INPUT_GET, 'userId');
-        }
         $nameError = filter_input(INPUT_GET, 'nameError');
         $bodyError = filter_input(INPUT_GET, 'bodyError');
         $skillsError = filter_input(INPUT_GET, 'skillsError');
@@ -392,7 +379,7 @@ switch ($action) {
         $body = filter_input(INPUT_GET, 'body', FILTER_DEFAULT);
         $skills = filter_input(INPUT_GET, 'skills', FILTER_DEFAULT);
         $skillsArray = explode(",", $skills);
-        if($userId == NULL || $userId <0){
+        if(empty($_SESSION['user']) || $_SESSION['user']->getId() < 0){
             header('Location: .?action=display_login');
         } else{
             include('views/edit_question.php');
@@ -401,10 +388,9 @@ switch ($action) {
     }
 
     case 'delete_question':{
-        $userId = filter_input(INPUT_POST, 'userId');
         $questionID = filter_input(INPUT_POST, 'questionID');
-        delete_question($questionID);
-        header("Location: .?action=display_questions&userId=$userId");
+        QuestionsDB::delete_question($questionID);
+        header("Location: .?action=display_questions");
         break;
     }
 

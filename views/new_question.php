@@ -3,7 +3,6 @@
     <h1 class="h1 mb-3 font-weight-bold">Post New Question</h1>
     <form action="index.php" method="post">
         <input id="action" name="action" value="submit_question" type="hidden">
-        <input id="userId" name="userId" value="<?php echo($userId);?>" type="hidden">
         <div class="container alert alert-danger justify-content-center col-1" role="alert" <?php
         if(empty($nameError)){
             echo('style="display: none;"');
