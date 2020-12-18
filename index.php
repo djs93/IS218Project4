@@ -408,6 +408,16 @@ switch ($action) {
         break;
     }
 
+    case 'logout':{
+        // remove all session variables
+        session_unset();
+
+        // destroy the session
+        session_destroy();
+
+        header('Location: .?action=display_login');
+    }
+
     default: {
         $error = 'Unknown Action '.$action;
         include('errors/error.php');
