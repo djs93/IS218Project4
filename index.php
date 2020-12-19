@@ -414,6 +414,16 @@ switch ($action) {
         break;
     }
 
+    case 'display_all_questions':{
+        if(empty($_SESSION['user']) || $_SESSION['user']->getId() < 0){
+            header('Location: .?action=display_login');
+        } else{
+            $questions = QuestionsDB::get_all_questions();
+            include('views/display_all_questions.php');
+        }
+        break;
+    }
+
     default: {
         $error = 'Unknown Action '.$action;
         include('errors/error.php');

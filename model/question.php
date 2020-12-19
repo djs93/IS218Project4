@@ -1,12 +1,13 @@
 <?php
 class question
 {
-    private $id, $owneremail, $createdate, $title, $body, $skills, $score;
+    private $id, $owneremail, $ownderid, $createdate, $title, $body, $skills, $score;
 
-    public function __construct($id, $owneremail, $createdate, $title, $body, $skills, $score)
+    public function __construct($id, $owneremail, $ownderid, $createdate, $title, $body, $skills, $score)
     {
         $this->id = $id;
         $this->owneremail = $owneremail;
+        $this->ownderid = $ownderid;
         $this->createdate = $createdate;
         $this->title = $title;
         $this->body = $body;
@@ -126,5 +127,20 @@ class question
         $this->score = $score;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getOwnerid()
+    {
+        return $this->ownderid;
+    }
+
+    /**
+     * @param mixed $ownderid
+     */
+    public function setOwnderid($ownderid)
+    {
+        $this->ownderid = $ownderid;
+    }
 
 }

@@ -13,8 +13,26 @@ class QuestionsDB
         $statement->closeCursor();
         $questions = [];
         foreach ($questions_fetch as $question) {
-            $new_question = new question($question['id'], $question['owneremail'], $question['createdate'],
-                $question['title'], $question['body'], $question['skills'], $question['score']);
+            $new_question = new question($question['id'], $question['owneremail'], $question['ownerid'],
+                $question['createddate'], $question['title'], $question['body'], $question['skills'], $question['score']);
+            array_push($questions,$new_question);
+        }
+        return $questions;
+    }
+
+    public static function get_all_questions()
+    {
+        $db = Database::getDB();
+
+        $query = 'SELECT * FROM questions';
+        $statement = $db->prepare($query);
+        $statement->execute();
+        $questions_fetch = $statement->fetchAll();
+        $statement->closeCursor();
+        $questions = [];
+        foreach ($questions_fetch as $question) {
+            $new_question = new question($question['id'], $question['owneremail'], $question['ownerid'],
+                $question['createddate'], $question['title'], $question['body'], $question['skills'], $question['score']);
             array_push($questions,$new_question);
         }
         return $questions;
@@ -58,13 +76,13 @@ class QuestionsDB
         $statement->closeCursor();
 
         if(!empty($questions)){
-            return new question($questions['id'],$questions['owneremail'],$questions['createddate'],
-                $questions['title'],$questions['body'],$questions['skills'],$questions['score']);
+            return new question($questions['id'], $questions['owneremail'], $questions['ownerid'],
+                $questions['createddate'], $questions['title'], $questions['body'], $questions['skills'],
+                $questions['score']);
         }
         else{
             return false;
         }
-
     }
 
     public static function edit_question($questionId, $title, $body, $skills)

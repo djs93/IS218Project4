@@ -14,7 +14,7 @@
                     <a class="btn btn-lg btn-primary mt-3" href=".?action=display_question_form">Add Question</a>
                 </li>
                 <li>
-                    <a class="btn btn-lg btn-primary mt-3" href=".?action=display_all_questions">All Questions</a>
+                    <a class="btn btn-lg btn-primary mt-3" href=".?action=display_questions">User Questions</a>
                 </li>
             </ul>
         </nav>
@@ -24,14 +24,14 @@
             <table class="col-10 table table-striped table-bordered">
                 <tr>
                     <th>Question Title</th>
+                    <th>Author</th>
                     <th>Quesiton Body</th>
                     <th>View Details</th>
-                    <th>Edit</th>
-                    <th>Delete</th>
                 </tr>
                 <?php foreach ($questions as $question) : ?>
                     <tr>
                         <td><?php echo $question->getTitle(); ?></td>
+                        <td><?php echo AccountsDB::get_user_name($question->getOwnerId()); ?></td>
                         <td><?php echo $question->getBody(); ?></td>
                         <td>
                             <form action="index.php" method="post">
@@ -39,24 +39,6 @@
                                 <input id="questionId" name="questionId" value="<?php echo $question->getId();?>" type="hidden">
                                 <div>
                                     <input class="btn btn-secondary btn-sm" type="submit" value="View">
-                                </div>
-                            </form>
-                        </td>
-                        <td>
-                            <form action="index.php" method="post">
-                                <input id="action" name="action" value="display_edit_question" type="hidden">
-                                <input id="questionId" name="questionId" value="<?php echo $question->getId();?>" type="hidden">
-                                <div>
-                                    <input class="btn btn-secondary btn-sm" type="submit" value="Edit">
-                                </div>
-                            </form>
-                        </td>
-                        <td>
-                            <form action="index.php" method="post">
-                                <input id="action" name="action" value="delete_question" type="hidden">
-                                <input id="questionID" name="questionID" value="<?php echo $question->getId();?>" type="hidden">
-                                <div>
-                                    <input class="btn btn-secondary btn-sm" type="submit" value="Delete">
                                 </div>
                             </form>
                         </td>

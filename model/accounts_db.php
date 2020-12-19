@@ -72,10 +72,25 @@ class AccountsDB {
         $account = $statement->fetch();
         $statement->closeCursor();
 
-        if (!empty($user)){
-            $user_account = new Account($account['id'],$account['email'],$account['fname'],$account['lname'],
+        if (!empty($account)){
+            return new Account($account['id'],$account['email'],$account['fname'],$account['lname'],
                 $account['birthday'], $account['password']);
-            return $user_account;
+        } else {
+            return false;
+        }
+    }
+
+    public static function get_user_name($userId){
+        $db = Database::getDB();
+        $query = 'SELECT fname,lname FROM accounts WHERE id = :id';
+        $statement = $db->prepare($query);
+        $statement->bindValue(':id', $userId);
+        $statement->execute();
+        $account = $statement->fetch();
+        $statement->closeCursor();
+
+        if (!empty($account)){
+            return ucfirst($account['fname'].' '.$account['lname']);
         } else {
             return false;
         }
