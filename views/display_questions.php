@@ -50,7 +50,7 @@
                                 <input id="action" name="action" value="display_post_answer" type="hidden">
                                 <input id="questionId" name="questionId" value="<?php echo $question->getId();?>" type="hidden">
                                 <div>
-                                    <input class="btn btn-secondary btn-sm" type="submit" value="View">
+                                    <input class="btn btn-secondary btn-sm" type="submit" value="Answer">
                                 </div>
                             </form>
                         </td>

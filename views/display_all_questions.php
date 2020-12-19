@@ -27,6 +27,7 @@
                     <th>Author</th>
                     <th>Quesiton Body</th>
                     <th>View Details</th>
+                    <th style="width: 7% !important;">New Answer</th>
                 </tr>
                 <?php foreach ($questions as $question) : ?>
                     <tr>
@@ -39,6 +40,15 @@
                                 <input id="questionId" name="questionId" value="<?php echo $question->getId();?>" type="hidden">
                                 <div>
                                     <input class="btn btn-secondary btn-sm" type="submit" value="View">
+                                </div>
+                            </form>
+                        </td>
+                        <td>
+                            <form action="index.php" method="post">
+                                <input id="action" name="action" value="display_post_answer" type="hidden">
+                                <input id="questionId" name="questionId" value="<?php echo $question->getId();?>" type="hidden">
+                                <div>
+                                    <input class="btn btn-secondary btn-sm" type="submit" value="Answer">
                                 </div>
                             </form>
                         </td>

@@ -1,6 +1,29 @@
+<?php
+$name = ucfirst($_SESSION['user']->getFname()).' '.ucfirst($_SESSION['user']->getLname());
+?>
 <?php $title="Post New Question"; include('abstract-views/header.php');?>
-<div class="col">
-    <h1 class="h1 mb-3 font-weight-bold">Post New Question</h1>
+    <div class="col-2" style="border-right: 1px solid rgba(0,0,0,.1); background-color: rgba(0,0,0,0.05);">
+        <nav id="sidebar" class="mt-4">
+            <div class="sidebar-header">
+                <h3><?php echo $name;?></h3>
+            </div>
+
+            <ul class="list-unstyled components">
+                <p><?php echo $_SESSION['user']->getEmail();?></>
+                <li>
+                    <a class="btn btn-lg btn-primary mt-3" href=".?action=display_question_form">Add Question</a>
+                </li>
+                <li>
+                    <a class="btn btn-lg btn-primary mt-3" href=".?action=display_questions">Home</a>
+                </li>
+                <li>
+                    <a class="btn btn-lg btn-primary mt-3" href=".?action=display_all_questions">All Questions</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <div class="col">
+    <h1 class="h1 mb-3 mt-3 font-weight-bold">Post New Question</h1>
     <form action="index.php" method="post">
         <input id="action" name="action" value="submit_question" type="hidden">
         <div class="container alert alert-danger justify-content-center col-1" role="alert" <?php
