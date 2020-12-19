@@ -410,6 +410,9 @@ switch ($action) {
 
     case 'show_question_single':{
         $questionID = filter_input(INPUT_POST, 'questionId');
+        if($questionID == null){
+            $questionID = filter_input(INPUT_GET, 'questionId');
+        }
         $question = QuestionsDB::get_question($questionID);
         include('views/display_question_single.php');
         break;
@@ -421,6 +424,38 @@ switch ($action) {
         } else{
             $questions = QuestionsDB::get_all_questions();
             include('views/display_all_questions.php');
+        }
+        break;
+    }
+
+    case 'new_answer':{
+        $questionID = filter_input(INPUT_POST, 'questionId');
+        $answerBody = filter_input(INPUT_POST, 'body');
+        if(!empty($questionID)&&!empty($answerBody)){
+            AnswersDB::newAnswer($questionID,$_SESSION['user']->getId(),$answerBody);
+            header("Location: .?action=show_question_single&questionId=$questionID");
+        }
+        elseif (empty($answerBody)){
+            $bodyError = "Answer body cannot be empty!";
+            $loc = "Location: .?action=display_post_answer_errored&bodyError=$bodyError&questionId=$questionID";
+            header($loc);
+        }
+        break;
+    }
+
+    case 'display_post_answer':{
+        $questionId = filter_input(INPUT_POST, 'questionId');
+        include('views/new_answer.php');
+        break;
+    }
+
+    case 'display_post_answer_errored':{
+        $bodyError = filter_input(INPUT_GET, 'bodyError');
+        $questionId = filter_input(INPUT_GET, 'questionId');
+        if(empty($_SESSION['user']) || $_SESSION['user']->getId() < 0){
+            header('Location: .?action=display_login');
+        } else{
+            include('views/new_answer.php');
         }
         break;
     }

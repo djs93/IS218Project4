@@ -24,8 +24,8 @@
         </nav>
     </div>
     <div class="col">
-        <?php if($question->getOwnerid() === $_SESSION['user']->getId()):?>
         <div class="row justify-content-md-center mt-3">
+        <?php if($question->getOwnerid() === $_SESSION['user']->getId()):?>
             <div class="col-2">
                 <form action="index.php" method="post">
                     <input id="action" name="action" value="display_edit_question" type="hidden">
@@ -35,6 +35,17 @@
                     </div>
                 </form>
             </div>
+        <?php endif;?>
+            <div class="col-2">
+                <form action="index.php" method="post">
+                    <input id="action" name="action" value="display_post_answer" type="hidden">
+                    <input id="questionId" name="questionId" value="<?php echo $question->getId();?>" type="hidden">
+                    <div>
+                        <input class="btn btn-secondary btn-md" type="submit" value="New Answer">
+                    </div>
+                </form>
+            </div>
+        <?php if($question->getOwnerid() === $_SESSION['user']->getId()):?>
             <div class="col-2">
                 <form action="index.php" method="post">
                     <input id="action" name="action" value="delete_question" type="hidden">
@@ -44,11 +55,9 @@
                     </div>
                 </form>
             </div>
+        <?php endif;?>
         </div>
         <div class="row justify-content-md-center mt-3">
-            <?php else:?>
-        <div class="row justify-content-md-center mt-5">
-        <?php endif;?>
             <table class="col-10 table table-striped table-bordered">
                 <tr>
                     <th>Question Title</th>

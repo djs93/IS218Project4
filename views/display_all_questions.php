@@ -23,7 +23,7 @@
         <div class="row justify-content-md-center mt-5">
             <table class="col-10 table table-striped table-bordered">
                 <tr>
-                    <th>Question Title</th>
+                    <th style="width: 30% !important;">Question Title</th>
                     <th>Author</th>
                     <th>Quesiton Body</th>
                     <th>View Details</th>
