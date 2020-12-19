@@ -1,10 +1,11 @@
 <?php
-
+require('model/answer.php');
 require('model/account.php');
 require('model/question.php');
 require('model/database.php');
 require('model/accounts_db.php');
 require('model/questions_db.php');
+require('model/answers_db.php');
 
 session_start();
 
