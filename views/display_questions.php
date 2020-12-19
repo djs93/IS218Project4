@@ -22,6 +22,7 @@
                 <tr>
                     <th>Question Title</th>
                     <th>Quesiton Body</th>
+                    <th>View Details</th>
                     <th>Edit</th>
                     <th>Delete</th>
                 </tr>
@@ -29,6 +30,15 @@
                     <tr>
                         <td><?php echo $question->getTitle(); ?></td>
                         <td><?php echo $question->getBody(); ?></td>
+                        <td>
+                            <form action="index.php" method="post">
+                                <input id="action" name="action" value="show_question_single" type="hidden">
+                                <input id="questionId" name="questionId" value="<?php echo $question->getId();?>" type="hidden">
+                                <div>
+                                    <input class="btn btn-secondary btn-sm" type="submit" value="View">
+                                </div>
+                            </form>
+                        </td>
                         <td>
                             <form action="index.php" method="post">
                                 <input id="action" name="action" value="display_edit_question" type="hidden">

@@ -58,7 +58,7 @@ class QuestionsDB
         $statement->closeCursor();
 
         if(!empty($questions)){
-            return new question($questions['id'],$questions['owneremail'],$questions['createdate'],
+            return new question($questions['id'],$questions['owneremail'],$questions['createddate'],
                 $questions['title'],$questions['body'],$questions['skills'],$questions['score']);
         }
         else{

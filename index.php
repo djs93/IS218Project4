@@ -407,6 +407,13 @@ switch ($action) {
         header('Location: .?action=display_login');
     }
 
+    case 'show_question_single':{
+        $questionID = filter_input(INPUT_POST, 'questionId');
+        $question = QuestionsDB::get_question($questionID);
+        include('views/display_question_single.php');
+        break;
+    }
+
     default: {
         $error = 'Unknown Action '.$action;
         include('errors/error.php');
