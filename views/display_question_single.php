@@ -65,12 +65,14 @@
                     <th>Author Email</th>
                     <th>Creation Time</th>
                     <th>Question ID</th>
+                    <th>Score</th>
                 </tr>
                 <tr>
                     <td><?php echo AccountsDB::get_user_name($question->getOwnerid()); ?></td>
                     <td><?php echo $question->getOwneremail(); ?></td>
                     <td><?php echo $question->getCreatedate(); ?></td>
                     <td><?php echo $question->getId(); ?></td>
+                    <td><?php echo $question->getScore(); ?></td>
                 </tr>
             </table>
         </div>
