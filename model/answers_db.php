@@ -1,5 +1,5 @@
 <?php
-class QuestionsDB
+class AnswersDB
 {
     public static function newAnswer($questionId, $ownerId, $body)
     {
