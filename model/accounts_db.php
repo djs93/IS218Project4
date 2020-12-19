@@ -1,7 +1,7 @@
 <?php
 class AccountsDB {
     public static function validate_login($email, $password){
-        global $db;
+        $db = Database::getDB();
         $query = 'SELECT * FROM accounts WHERE email = :email AND password = :password';
         $statement = $db->prepare($query);
         $statement->bindValue(':email', $email);
@@ -19,7 +19,7 @@ class AccountsDB {
     }
 
     public static function add_user($email, $fname, $lname, $birthday, $password){
-        global $db;
+        $db = Database::getDB();
         $query = 'INSERT INTO `accounts` (`email`, `fname`, `lname`, `birthday`, `password`) 
                         VALUES(:email, :fname, :lname, :bday, :password)';
         $statement = $db->prepare($query);
@@ -48,7 +48,7 @@ class AccountsDB {
     }
 
     public static function check_registered($email){
-        global $db;
+        $db = Database::getDB();
         $query = 'SELECT * FROM accounts WHERE email = :email';
         $statement = $db->prepare($query);
         $statement->bindValue(':email', $email);
@@ -64,7 +64,7 @@ class AccountsDB {
     }
 
     public static function get_user_info($userId){
-        global $db;
+        $db = Database::getDB();
         $query = 'SELECT * FROM accounts WHERE id = :id';
         $statement = $db->prepare($query);
         $statement->bindValue(':id', $userId);

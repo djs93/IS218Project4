@@ -3,7 +3,7 @@ class QuestionsDB
 {
     public static function get_users_questions($userId)
     {
-        global $db;
+        $db = Database::getDB();
 
         $query = 'SELECT * FROM questions WHERE ownerid = :userId';
         $statement = $db->prepare($query);
@@ -22,7 +22,7 @@ class QuestionsDB
 
     public static function create_question($title, $body, $skills, $userId)
     {
-        global $db;
+        $db = Database::getDB();
 
         $query = 'SELECT email FROM accounts WHERE id = :userId';
         $statement = $db->prepare($query);
@@ -48,7 +48,7 @@ class QuestionsDB
 
     public static function get_question($questionId)
     {
-        global $db;
+        $db = Database::getDB();
 
         $query = 'SELECT * FROM questions WHERE id = :questionId';
         $statement = $db->prepare($query);
@@ -69,7 +69,7 @@ class QuestionsDB
 
     public static function edit_question($questionId, $title, $body, $skills)
     {
-        global $db;
+        $db = Database::getDB();
 
         $query = 'UPDATE questions SET
                 title = :title,
@@ -87,7 +87,7 @@ class QuestionsDB
 
     public static function delete_question($questionId)
     {
-        global $db;
+        $db = Database::getDB();
 
         $query = 'DELETE FROM questions 
               WHERE id=:questionID';

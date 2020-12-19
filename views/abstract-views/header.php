@@ -7,9 +7,14 @@
 </head>
 <!-- the body section -->
 <body class="text-center" style="height: 100%; margin: 0;">
-    <div class="row justify-content-start" style="border-bottom: 1px solid rgba(0,0,0,.1); background-color: rgba(0,0,0,0.05);">
-        <div class="col-auto">
-            <h3 class="ml-2 mt-1">Project 3 - IS218</h3>
+    <div class="row justify-content-between align-content-center" style="border-bottom: 1px solid rgba(0,0,0,.1); background-color: rgba(0,0,0,0.05);">
+        <div class="col-auto my-auto">
+            <h3 class="ml-2 ">Project 3 - IS218</h3>
         </div>
+        <?php if(!($action==='display_login')):?>
+        <div class="col-auto">
+            <a class="btn btn-md btn-secondary mt-1 mb-1 mr-2" href=".?action=logout">Log Out</a>
+        </div>
+        <?php endif;?>
     </div>
     <div class="row h-100">

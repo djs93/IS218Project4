@@ -14,7 +14,7 @@ if ($action == NULL) {
     if ($action == NULL && empty($_SESSION['user'])) {
         $action = 'display_login';
     }
-    else{
+    else if($action == NULL){
         $action = 'display_questions';
     }
 }
