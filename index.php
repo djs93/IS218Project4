@@ -460,6 +460,22 @@ switch ($action) {
         break;
     }
 
+    case 'upvote_answer':{
+        $questionId = filter_input(INPUT_GET, 'questionId');
+        $answerId = filter_input(INPUT_GET, 'answerId');
+        AnswersDB::apply_upvote($answerId,$_SESSION['user']->getId());
+        header("Location: .?action=show_question_single&questionId=$questionId");
+        break;
+    }
+
+    case 'downvote_answer':{
+        $questionId = filter_input(INPUT_GET, 'questionId');
+        $answerId = filter_input(INPUT_GET, 'answerId');
+        AnswersDB::apply_downvote($answerId,$_SESSION['user']->getId());
+        header("Location: .?action=show_question_single&questionId=$questionId");
+        break;
+    }
+
     default: {
         $error = 'Unknown Action '.$action;
         include('errors/error.php');

@@ -68,7 +68,7 @@
                     </tr>
             </table>
         </div>
-        <div class="row justify-content-md-center mt-5">
+        <div class="row justify-content-md-center mt-1">
             <table class="col-10 table table-striped table-bordered">
                 <tr>
                     <th>Author</th>
@@ -78,11 +78,11 @@
                     <th>Score</th>
                 </tr>
                 <tr>
-                    <td><?php echo AccountsDB::get_user_name($question->getOwnerid()); ?></td>
-                    <td><?php echo $question->getOwneremail(); ?></td>
-                    <td><?php echo $question->getCreatedate(); ?></td>
-                    <td><?php echo $question->getId(); ?></td>
-                    <td><?php echo $question->getScore(); ?></td>
+                    <td style="line-height: 5px;"><?php echo AccountsDB::get_user_name($question->getOwnerid()); ?></td>
+                    <td style="line-height: 5px;"><?php echo $question->getOwneremail(); ?></td>
+                    <td style="line-height: 5px;"><?php echo $question->getCreatedate(); ?></td>
+                    <td style="line-height: 5px;"><?php echo $question->getId(); ?></td>
+                    <td style="line-height: 5px;"><?php echo $question->getScore(); ?></td>
                 </tr>
             </table>
         </div>
@@ -96,13 +96,13 @@
                 </tr>
             </table>
         </div>
-        <div class="row justify-content-md-center mt-5">
+        <div class="row justify-content-md-center mt-1">
             <table class="col-10 table table-striped table-bordered">
                 <tr>
                     <th>Listed Skills</th>
                 </tr>
                 <?php foreach ($skillsArray as $skill) : ?>
-                <tr>
+                <tr style="line-height: 5px;">
                     <td><?php echo $skill; ?></td>
                 </tr>
                 <?php endforeach; ?>
@@ -117,18 +117,41 @@
                     <td>
                         <table class="col-12 table table-striped table-bordered">
                             <tr>
-                                <th>Author</th>
+                                <th style="width: 7% !important;">Vote</th>
                                 <th style="width: 7% !important;">Score</th>
-                                <th style="width: 10% !important;">Date</th>
                                 <th>Answer Body</th>
+                                <th style="width: 10% !important;">Author</th>
+                                <th style="width: 10% !important;">Date</th>
                             </tr>
                             <?php /** @var answer $answer */
                             foreach ($answerArray as $answer) : ?>
                                 <tr>
-                                    <td><?php echo AccountsDB::get_user_name($answer->getOwnerid()); ?></td>
-                                    <td><?php echo $answer->getScore(); ?></td>
-                                    <td><?php echo $answer->getCreationdate(); ?></td>
-                                    <td><?php echo $answer->getBody(); ?></td>
+                                    <td style="vertical-align: middle">
+                                        <div class="col">
+                                            <div class="row justify-content-md-center">
+                                                <a class="btn btn-sm <?php
+                                                if(in_array($_SESSION['user']->getId(),$answer->getDownvotedIds())){
+                                                    echo "btn-secondary";
+                                                }
+                                                else{
+                                                    echo "btn-success";
+                                                }?>"
+                                                   href=".?action=upvote_answer&answerId=<?php echo $answer->getId() ?>&questionId=<?php echo $question->getId() ?>">↑</a>
+                                                <a class="btn btn-sm <?php
+                                                if(in_array($_SESSION['user']->getId(),$answer->getUpvotedIds())){
+                                                    echo "btn-secondary";
+                                                }
+                                                else{
+                                                    echo "btn-danger";
+                                                }?>"
+                                                   href=".?action=downvote_answer&answerId=<?php echo $answer->getId() ?>&questionId=<?php echo $question->getId() ?>">↓</a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td style="vertical-align: middle"><?php echo $answer->getScore();?></td>
+                                    <td style="vertical-align: middle"><?php echo $answer->getBody(); ?></td>
+                                    <td style="vertical-align: middle"><?php echo AccountsDB::get_user_name($answer->getOwnerid()); ?></td>
+                                    <td style="vertical-align: middle"><?php echo $answer->getCreationdate(); ?></td>
                                 </tr>
                             <?php endforeach; ?>
                         </table>
