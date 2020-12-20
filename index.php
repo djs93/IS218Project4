@@ -490,6 +490,20 @@ switch ($action) {
         break;
     }
 
+    case 'upvote_question_user':{
+        $questionId = filter_input(INPUT_GET, 'questionId');
+        QuestionsDB::apply_upvote($questionId,$_SESSION['user']->getId());
+        header("Location: .?action=display_questions");
+        break;
+    }
+
+    case 'downvote_question_user':{
+        $questionId = filter_input(INPUT_GET, 'questionId');
+        QuestionsDB::apply_downvote($questionId,$_SESSION['user']->getId());
+        header("Location: .?action=display_questions");
+        break;
+    }
+
     default: {
         $error = 'Unknown Action '.$action;
         include('errors/error.php');
