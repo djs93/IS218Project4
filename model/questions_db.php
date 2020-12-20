@@ -14,7 +14,8 @@ class QuestionsDB
         $questions = [];
         foreach ($questions_fetch as $question) {
             $new_question = new question($question['id'], $question['owneremail'], $question['ownerid'],
-                $question['createddate'], $question['title'], $question['body'], $question['skills'], $question['score']);
+                $question['createddate'], $question['title'], $question['body'], $question['skills'], $question['score'],
+                $question['downvoted_ids'],$question['upvoted_ids']);
             array_push($questions,$new_question);
         }
         return $questions;
@@ -32,7 +33,8 @@ class QuestionsDB
         $questions = [];
         foreach ($questions_fetch as $question) {
             $new_question = new question($question['id'], $question['owneremail'], $question['ownerid'],
-                $question['createddate'], $question['title'], $question['body'], $question['skills'], $question['score']);
+                $question['createddate'], $question['title'], $question['body'], $question['skills'], $question['score'],
+                $question['downvoted_ids'],$question['upvoted_ids']);
             array_push($questions,$new_question);
         }
         return $questions;
@@ -51,15 +53,17 @@ class QuestionsDB
         $statement->closeCursor();
 
         $query = 'INSERT INTO questions
-                (owneremail,title, body, skills, ownerid, createddate)
+                (owneremail,title, body, skills, ownerid, createddate, upvoted_ids, downvoted_ids)
               VALUES 
-                (:email, :title, :body, :skills, :ownerid, now())';
+                (:email, :title, :body, :skills, :ownerid, now(), :uid, :did)';
         $statement = $db->prepare($query);
         $statement->bindValue(':ownerid', $userId);
         $statement->bindValue(':skills', $skills);
         $statement->bindValue(':body', $body);
         $statement->bindValue(':title', $title);
         $statement->bindValue(':email', $email);
+        $statement->bindValue(':uid', "");
+        $statement->bindValue(':did', "");
         $statement->execute();
         $statement->closeCursor();
     }
@@ -78,7 +82,7 @@ class QuestionsDB
         if(!empty($questions)){
             return new question($questions['id'], $questions['owneremail'], $questions['ownerid'],
                 $questions['createddate'], $questions['title'], $questions['body'], $questions['skills'],
-                $questions['score']);
+                $questions['score'],$questions['downvoted_ids'],$questions['upvoted_ids']);
         }
         else{
             return false;
@@ -111,6 +115,72 @@ class QuestionsDB
               WHERE id=:questionID';
         $statement = $db->prepare($query);
         $statement->bindValue(':questionID', $questionId);
+        $statement->execute();
+        $statement->closeCursor();
+    }
+
+    public static function apply_upvote($questionId, $userId){
+        $question = self::get_question($questionId);
+        $downvote_users = $question->getDownvotedIds();
+        $upvote_users = $question->getUpvotedIds();
+        if(in_array($userId,$downvote_users)){
+            //toggle off user's downvote
+            self::apply_downvote($questionId, $userId);
+            $question = self::get_question($questionId);
+        }
+        if(in_array($userId,$upvote_users)){
+            //decrement score and remove user from answer's upvote list
+            $question->setScore($question->getScore()-1);
+            $upvote_users = \array_diff($upvote_users, [$userId]);
+        }
+        else{
+            //increment score and add user to answer's upvote list
+            $question->setScore($question->getScore()+1);
+            array_push($upvote_users, $userId);
+        }
+        $question->setUpvotedIds($upvote_users);
+        $db = Database::getDB();
+        $query = 'UPDATE questions SET
+                score = :score,
+                upvoted_ids = :upvote_ids
+              WHERE id=:questionid';
+        $statement = $db->prepare($query);
+        $statement->bindValue(':score', $question->getScore());
+        $statement->bindValue(':upvote_ids',implode(',',$upvote_users));
+        $statement->bindValue(':questionid', $questionId);
+        $statement->execute();
+        $statement->closeCursor();
+    }
+
+    public static function apply_downvote($questionId, $userId){
+        $question = self::get_question($questionId);
+        $downvote_users = $question->getDownvotedIds();
+        $upvote_users = $question->getUpvotedIds();
+        if(in_array($userId,$upvote_users)){
+            //toggle off user's upvote
+            self::apply_upvote($questionId, $userId);
+            $question = self::get_question($questionId);
+        }
+        if(in_array($userId,$downvote_users)){
+            //increment score and remove user from answer's downvote list
+            $question->setScore($question->getScore()+1);
+            $downvote_users = \array_diff($downvote_users, [$userId]);
+        }
+        else{
+            //decrement score and add user to answer's downvote list
+            $question->setScore($question->getScore()-1);
+            array_push($downvote_users, $userId);
+        }
+        $question->setDownvotedIds($downvote_users);
+        $db = Database::getDB();
+        $query = 'UPDATE questions SET
+                score = :score,
+                downvoted_ids = :downvote_ids
+              WHERE id=:questionid';
+        $statement = $db->prepare($query);
+        $statement->bindValue(':score', $question->getScore());
+        $statement->bindValue(':downvote_ids',implode(',',$downvote_users));
+        $statement->bindValue(':questionid', $questionId);
         $statement->execute();
         $statement->closeCursor();
     }

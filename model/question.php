@@ -1,9 +1,9 @@
 <?php
 class question
 {
-    private $id, $owneremail, $ownderid, $createdate, $title, $body, $skills, $score;
+    private $id, $owneremail, $ownderid, $createdate, $title, $body, $skills, $score, $downvoted_ids, $upvoted_ids;
 
-    public function __construct($id, $owneremail, $ownderid, $createdate, $title, $body, $skills, $score)
+    public function __construct($id, $owneremail, $ownderid, $createdate, $title, $body, $skills, $score, $downvoted_ids, $upvoted_ids)
     {
         $this->id = $id;
         $this->owneremail = $owneremail;
@@ -13,6 +13,49 @@ class question
         $this->body = $body;
         $this->skills = $skills;
         $this->score = $score;
+        $this->downvoted_ids = $downvoted_ids;
+        $this->upvoted_ids = $upvoted_ids;
+    }
+    /**
+     * @return mixed
+     */
+    public function getDownvotedIds()
+    {
+        if($this->downvoted_ids != null){
+            return explode(',',$this->downvoted_ids );
+        }
+        else{
+            return [];
+        }
+    }
+
+    /**
+     * @param mixed $downvoted_ids
+     */
+    public function setDownvotedIds($downvoted_ids)
+    {
+        $this->downvoted_ids = implode(',',$downvoted_ids);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUpvotedIds()
+    {
+        if($this->upvoted_ids != null){
+            return explode(',',$this->upvoted_ids );
+        }
+        else{
+            return [];
+        }
+    }
+
+    /**
+     * @param mixed $upvoted_ids
+     */
+    public function setUpvotedIds($upvoted_ids)
+    {
+        $this->upvoted_ids = implode(',',$upvoted_ids);
     }
 
     /**

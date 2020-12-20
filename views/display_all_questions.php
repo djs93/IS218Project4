@@ -23,8 +23,9 @@
         <div class="row justify-content-md-center mt-5">
             <table class="col-10 table table-striped table-bordered">
                 <tr>
-                    <th style="width: 30% !important;">Question Title</th>
+                    <th style="width: 7% !important;">Vote</th>
                     <th style="width: 7% !important;">Score</th>
+                    <th style="width: 30% !important;">Question Title</th>
                     <th>Author</th>
                     <th style="width: 7% !important;">Answers</th>
                     <th>Question Body</th>
@@ -34,12 +35,34 @@
                 <?php /** @var question $question */
                 foreach ($questions as $question) : ?>
                     <tr>
-                        <td><?php echo $question->getTitle(); ?></td>
-                        <td><?php echo $question->getScore(); ?></td>
-                        <td><?php echo AccountsDB::get_user_name($question->getOwnerId()); ?></td>
-                        <td><?php echo count(AnswersDB::get_answers($question->getId())); ?></td>
-                        <td><?php echo $question->getBody(); ?></td>
-                        <td>
+                        <td style="vertical-align: middle">
+                            <div class="col">
+                                <div class="row justify-content-md-center">
+                                    <a class="btn btn-sm <?php
+                                    if(in_array($_SESSION['user']->getId(),$question->getDownvotedIds())){
+                                        echo "btn-secondary";
+                                    }
+                                    else{
+                                        echo "btn-success";
+                                    }?>"
+                                       href=".?action=upvote_question&questionId=<?php echo $question->getId() ?>">↑</a>
+                                    <a class="btn btn-sm <?php
+                                    if(in_array($_SESSION['user']->getId(),$question->getUpvotedIds())){
+                                        echo "btn-secondary";
+                                    }
+                                    else{
+                                        echo "btn-danger";
+                                    }?>"
+                                       href=".?action=downvote_question&questionId=<?php echo $question->getId() ?>">↓</a>
+                                </div>
+                            </div>
+                        </td>
+                        <td style="vertical-align: middle"><?php echo $question->getScore(); ?></td>
+                        <td style="vertical-align: middle"><?php echo $question->getTitle(); ?></td>
+                        <td style="vertical-align: middle"><?php echo AccountsDB::get_user_name($question->getOwnerId()); ?></td>
+                        <td style="vertical-align: middle"><?php echo count(AnswersDB::get_answers($question->getId())); ?></td>
+                        <td style="vertical-align: middle"><?php echo $question->getBody(); ?></td>
+                        <td style="vertical-align: middle">
                             <form action="index.php" method="post">
                                 <input id="action" name="action" value="show_question_single" type="hidden">
                                 <input id="questionId" name="questionId" value="<?php echo $question->getId();?>" type="hidden">
@@ -48,7 +71,7 @@
                                 </div>
                             </form>
                         </td>
-                        <td>
+                        <td style="vertical-align: middle">
                             <form action="index.php" method="post">
                                 <input id="action" name="action" value="display_post_answer" type="hidden">
                                 <input id="questionId" name="questionId" value="<?php echo $question->getId();?>" type="hidden">
