@@ -100,7 +100,12 @@ class answer
      */
     public function getDownvotedIds()
     {
-        return $this->downvoted_ids;
+        if($this->downvoted_ids != null){
+            return explode(',',$this->downvoted_ids );
+        }
+        else{
+            return [];
+        }
     }
 
     /**
@@ -108,7 +113,7 @@ class answer
      */
     public function setDownvotedIds($downvoted_ids)
     {
-        $this->downvoted_ids = $downvoted_ids;
+        $this->downvoted_ids = implode(',',$downvoted_ids);
     }
 
     /**
@@ -116,7 +121,12 @@ class answer
      */
     public function getUpvotedIds()
     {
-        return $this->upvoted_ids;
+        if($this->upvoted_ids != null){
+            return explode(',',$this->upvoted_ids );
+        }
+        else{
+            return [];
+        }
     }
 
     /**
@@ -124,7 +134,7 @@ class answer
      */
     public function setUpvotedIds($upvoted_ids)
     {
-        $this->upvoted_ids = $upvoted_ids;
+        $this->upvoted_ids = implode(',',$upvoted_ids);
     }
 
     /**
