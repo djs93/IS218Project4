@@ -6,9 +6,9 @@ class AnswersDB
         $db = Database::getDB();
 
         $query = 'INSERT INTO answers
-                (questionid,ownerid, body)
+                (questionid,ownerid, body, creationdate)
               VALUES 
-                (:questionid, :ownerid, :body)';
+                (:questionid, :ownerid, :body, now())';
         $statement = $db->prepare($query);
         $statement->bindValue(':questionid', $questionId);
         $statement->bindValue(':ownerid', $ownerId);
@@ -21,7 +21,7 @@ class AnswersDB
     {
         $db = Database::getDB();
 
-        $query = 'SELECT * FROM answers WHERE questionid = :questionId';
+        $query = 'SELECT * FROM answers WHERE questionid = :questionId ORDER BY score DESC';
         $statement = $db->prepare($query);
         $statement->bindValue(':questionId', $questionId);
         $statement->execute();
@@ -30,7 +30,7 @@ class AnswersDB
         $answers = [];
         foreach ($answers_fetch as $answer) {
             $new_answer = new answer($answer['id'],$answer['score'],$answer['questionid'],$answer['ownerid'],
-            $answer['downvoted_ids'],$answer['upvoted_ids'],$answer['body']);
+            $answer['downvoted_ids'],$answer['upvoted_ids'],$answer['body'],$answer['creationdate']);
             array_push($answers,$new_answer);
         }
         return $answers;

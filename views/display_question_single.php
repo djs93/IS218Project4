@@ -1,6 +1,7 @@
 <?php
     $name = ucfirst($_SESSION['user']->getFname()).' '.ucfirst($_SESSION['user']->getLname());
     $skillsArray = explode(",", $question->getSkills());
+    $answerArray = AnswersDB::get_answers($question->getId());
 ?>
 <?php $title="User Questions"; include('abstract-views/header.php');?>
     <div class="col-2" style="border-right: 1px solid rgba(0,0,0,.1); background-color: rgba(0,0,0,0.05);">
@@ -105,6 +106,34 @@
                     <td><?php echo $skill; ?></td>
                 </tr>
                 <?php endforeach; ?>
+            </table>
+        </div>
+        <div class="row justify-content-md-center mt-5">
+            <table class="col-10 table table-striped table-bordered">
+                <tr>
+                    <th>Answers</th>
+                </tr>
+                <tr>
+                    <td>
+                        <table class="col-12 table table-striped table-bordered">
+                            <tr>
+                                <th>Author</th>
+                                <th style="width: 7% !important;">Score</th>
+                                <th style="width: 10% !important;">Date</th>
+                                <th>Answer Body</th>
+                            </tr>
+                            <?php /** @var answer $answer */
+                            foreach ($answerArray as $answer) : ?>
+                                <tr>
+                                    <td><?php echo AccountsDB::get_user_name($answer->getOwnerid()); ?></td>
+                                    <td><?php echo $answer->getScore(); ?></td>
+                                    <td><?php echo $answer->getCreationdate(); ?></td>
+                                    <td><?php echo $answer->getBody(); ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </table>
+                    </td>
+                </tr>
             </table>
         </div>
     </div>

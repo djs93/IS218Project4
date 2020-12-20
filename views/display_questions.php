@@ -26,8 +26,9 @@
                     <th>Question Title</th>
                     <th>Quesiton Body</th>
                     <th style="width: 8% !important;">Score</th>
-                    <th style="width: 10% !important;">View Details</th>
-                    <th style="width: 10% !important;">New Answer</th>
+                    <th style="width: 8% !important;">Answers</th>
+                    <th style="width: 7% !important;">View Details</th>
+                    <th style="width: 7% !important;">New Answer</th>
                     <th style="width: 7% !important;">Edit</th>
                     <th style="width: 8% !important;">Delete</th>
                 </tr>
@@ -36,6 +37,7 @@
                         <td><?php echo $question->getTitle(); ?></td>
                         <td><?php echo $question->getBody(); ?></td>
                         <td><?php echo $question->getScore(); ?></td>
+                        <td><?php echo count(AnswersDB::get_answers($question->getId())); ?></td>
                         <td>
                             <form action="index.php" method="post">
                                 <input id="action" name="action" value="show_question_single" type="hidden">

@@ -1,9 +1,9 @@
 <?php
 class answer
 {
-    private $id, $score, $questionid, $ownerid, $downvoted_ids, $upvoted_ids, $body;
+    private $id, $score, $questionid, $ownerid, $downvoted_ids, $upvoted_ids, $body, $creationdate;
 
-    public function __construct($id, $score, $questionid, $ownerid, $downvoted_ids, $upvoted_ids, $body)
+    public function __construct($id, $score, $questionid, $ownerid, $downvoted_ids, $upvoted_ids, $body, $creationdate)
     {
         $this->id = $id;
         $this->score = $score;
@@ -12,6 +12,23 @@ class answer
         $this->downvoted_ids = $downvoted_ids;
         $this->upvoted_ids = $upvoted_ids;
         $this->body = $body;
+        $this->creationdate = $creationdate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCreationdate()
+    {
+        return $this->creationdate;
+    }
+
+    /**
+     * @param mixed $creationdate
+     */
+    public function setCreationdate($creationdate)
+    {
+        $this->creationdate = $creationdate;
     }
 
     /**
