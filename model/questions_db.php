@@ -5,7 +5,7 @@ class QuestionsDB
     {
         $db = Database::getDB();
 
-        $query = 'SELECT * FROM questions WHERE ownerid = :userId';
+        $query = 'SELECT * FROM questions WHERE ownerid = :userId ORDER BY score DESC';
         $statement = $db->prepare($query);
         $statement->bindValue(':userId', $userId);
         $statement->execute();
@@ -24,7 +24,7 @@ class QuestionsDB
     {
         $db = Database::getDB();
 
-        $query = 'SELECT * FROM questions';
+        $query = 'SELECT * FROM questions ORDER BY score DESC';
         $statement = $db->prepare($query);
         $statement->execute();
         $questions_fetch = $statement->fetchAll();

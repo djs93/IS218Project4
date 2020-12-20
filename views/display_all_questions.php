@@ -24,14 +24,16 @@
             <table class="col-10 table table-striped table-bordered">
                 <tr>
                     <th style="width: 30% !important;">Question Title</th>
+                    <th style="width: 7% !important;">Score</th>
                     <th>Author</th>
-                    <th>Quesiton Body</th>
+                    <th>Question Body</th>
                     <th>View Details</th>
                     <th style="width: 7% !important;">New Answer</th>
                 </tr>
                 <?php foreach ($questions as $question) : ?>
                     <tr>
                         <td><?php echo $question->getTitle(); ?></td>
+                        <td><?php echo $question->getScore(); ?></td>
                         <td><?php echo AccountsDB::get_user_name($question->getOwnerId()); ?></td>
                         <td><?php echo $question->getBody(); ?></td>
                         <td>
